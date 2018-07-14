@@ -29,7 +29,13 @@ trait CommonValidate
         return true;
     }
 
-    protected function maxValue($value, $rule = '', $data = [], $field = '', $desc = ''){
+    protected function maxValue($value, $rule = '', $data = [], $field = '', $desc = '')
+    {
         return ($value + 0) > ($rule + 0) ? false : true;
+    }
+
+    protected function notEmpty($value, $rule = '', $data = [], $field = '', $desc = '')
+    {
+        return empty($value) ? false : true;
     }
 }

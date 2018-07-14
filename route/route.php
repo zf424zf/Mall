@@ -16,3 +16,8 @@ Route::get('api/:version/theme','api/:version.Theme/getSimpleList');
 Route::get('api/:version/theme/:id','api/:version.Theme/getOne');
 
 Route::get('api/:version/product/recent','api/:version.Product/recent');
+Route::get('api/:version/product/in_category','api/:version.Product/productInCategory');
+
+Route::get('api/:version/category/all','api/:version.Category/getAllCategory');
+
+Route::post('api/:version/token/user','api/:version.Token/getToken');
