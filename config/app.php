@@ -146,5 +146,6 @@ return [
 //    'show_custom_exception' => false
     'show_custom_exception' => env('show_custom_exception', false),
     //图片前缀url
-    'img_prefix' => env('img_prefix','http://mall.loc/images')
+    'img_prefix' => env('img_prefix','http://mall.loc/images'),
+    'curl_ssl_verify' => env('curl_ssl_verify',true)
 ];
