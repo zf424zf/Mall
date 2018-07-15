@@ -147,5 +147,7 @@ return [
     'show_custom_exception' => env('show_custom_exception', false),
     //图片前缀url
     'img_prefix' => env('img_prefix','http://mall.loc/images'),
-    'curl_ssl_verify' => env('curl_ssl_verify',true)
+    'curl_ssl_verify' => env('curl_ssl_verify',true),
+    'app_mall_key' => env('app_mall_key','X3DsFTMPF21a3Gir'),
+    'app_token_expire' => 7200
 ];
