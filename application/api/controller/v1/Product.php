@@ -20,6 +20,16 @@ class Product extends BaseController
         return json(compact('result'));
     }
 
+    /**
+     * 根据分类查找商品
+     * @param $id
+     * @return \think\response\Json
+     * @throws ProductException
+     * @throws \app\api\exception\ValidateException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function productInCategory($id)
     {
         $this->validate(compact('id'),ProductInCategoryValidate::class);
@@ -28,6 +38,25 @@ class Product extends BaseController
             throw new ProductException();
         }
         $result = $result->hidden(['summary']);
+        return json(compact('result'));
+    }
+
+    /**
+     * 根据商品id获取商品详情
+     * @param $id
+     * @return \think\response\Json
+     * @throws ProductException
+     * @throws \app\api\exception\ValidateException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function info($id){
+        $this->validate(compact('id'),ProductInCategoryValidate::class);
+        $result = ProductModel::getInfoById($id);
+        if(!$result){
+            throw new ProductException();
+        }
         return json(compact('result'));
     }
 }

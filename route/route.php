@@ -9,15 +9,27 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+//banner路由
 Route::get('api/:version/banner/:id', 'api/:version.Banner/getBanner');
 
-Route::get('api/:version/theme','api/:version.Theme/getSimpleList');
+//主题路由
+Route::group('api/:version/theme', function () {
+    Route::get('/', 'api/:version.Theme/getSimpleList');
+    Route::get('/:id', 'api/:version.Theme/getOne');
+});
 
-Route::get('api/:version/theme/:id','api/:version.Theme/getOne');
+//商品路由
+Route::group('api/:version/product/', function () {
+    Route::get(':id', 'api/:version.Product/info', [], ['id' => '\d+']);
+    Route::get('recent', 'api/:version.Product/recent');
+    Route::get('in_category', 'api/:version.Product/productInCategory');
+});
 
-Route::get('api/:version/product/recent','api/:version.Product/recent');
-Route::get('api/:version/product/in_category','api/:version.Product/productInCategory');
+//分类路由
+Route::get('api/:version/category/all', 'api/:version.Category/getAllCategory');
 
-Route::get('api/:version/category/all','api/:version.Category/getAllCategory');
+//用户登录
+Route::post('api/:version/token/user', 'api/:version.Token/getToken');
 
-Route::post('api/:version/token/user','api/:version.Token/getToken');
+//用户地址
+Route::post('api/:version/address','api/:version.Address/createOrUpdate');

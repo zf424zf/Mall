@@ -22,5 +22,5 @@ return [
     // 全局缓存有效期（0为永久有效）
     'expire'=>  0,
     // 缓存前缀
-    'prefix'=>  'think-mall',
+    'prefix'=>  '',
 ];
