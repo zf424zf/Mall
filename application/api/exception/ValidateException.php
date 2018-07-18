@@ -17,7 +17,7 @@ class ValidateException extends BaseException
 
     public $errorCode = 9998;
 
-    public function __construct(array $error)
+    public function __construct(array $error, $errorCode = 9998)
     {
 
         $error = current($error);
@@ -31,6 +31,7 @@ class ValidateException extends BaseException
         } else {
             //如果没有重写message属性
             $this->msg = is_array($error) ? implode("\n\r", $error) : $error;
+            $this->errorCode = $errorCode;
         }
     }
 }

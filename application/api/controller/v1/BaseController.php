@@ -11,6 +11,7 @@ namespace app\api\controller\v1;
 
 use app\api\exception\ValidateException;
 use think\Controller;
+use app\api\service\Token as TokenService;
 
 class BaseController extends Controller
 {
@@ -20,11 +21,11 @@ class BaseController extends Controller
      * 重写validate方法,修改抛出的异常为自定义的validate验证异常
      * 验证数据
      * @access protected
-     * @param  array        $data     数据
+     * @param  array $data 数据
      * @param  string|array $validate 验证器名或者验证规则数组
-     * @param  array        $message  提示信息
-     * @param  bool         $batch    是否批量验证
-     * @param  mixed        $callback 回调方法（闭包）
+     * @param  array $message 提示信息
+     * @param  bool $batch 是否批量验证
+     * @param  mixed $callback 回调方法（闭包）
      * @return array|string|true
      * @throws ValidateException
      */
@@ -67,4 +68,6 @@ class BaseController extends Controller
 
         return true;
     }
+
+
 }

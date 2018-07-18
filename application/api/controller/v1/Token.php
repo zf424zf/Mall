@@ -18,7 +18,7 @@ class Token extends BaseController
     {
         $this->validate(compact('code'),TokenGetValidate::class);
         $userToken = new UserToken($code);
-        $token = $userToken->get();
+         $token = $userToken->get();
         return json(compact('token'));
     }
 }

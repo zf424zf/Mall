@@ -13,7 +13,7 @@ use app\api\exception\TokenException;
 use app\api\exception\WeiXinException;
 use think\Exception;
 use app\api\model\User as UserModel;
-
+use Scope as ScopeApi;
 class UserToken extends Token
 {
     protected $code;
@@ -112,7 +112,7 @@ class UserToken extends Token
         $cacheInfo = $result;
         $cacheInfo['uid'] = $uid;
         //设置当前用户权限 默认16
-        $cacheInfo['scope'] = 16;
+        $cacheInfo['scope'] = ScopeApi::APP_User;
         return $cacheInfo;
     }
 
