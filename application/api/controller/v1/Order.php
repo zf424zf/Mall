@@ -10,6 +10,8 @@ namespace app\api\controller\v1;
 
 use app\api\Validate\Order\PlaceOrderValidate;
 use think\facade\Request;
+use app\api\service\Token as TokenService;
+use app\api\service\Order as OrderService;
 
 class Order extends BaseController
 {
@@ -22,12 +24,14 @@ class Order extends BaseController
     //若成功 进行库存检查 然后库存量扣除
 
     protected $middleware = [
-        'OrderPlaceMiddleware' => ['only' => ['placeorder'] ],
+        'OrderPlaceMiddleware' => ['only' => ['placeorder']],
     ];
 
     public function placeOrder()
     {
-        $products = json_decode(Request::post('products'),true);
-        $this->validate(compact('products'),PlaceOrderValidate::class);
+        $products = json_decode(Request::post('products'), true);
+        $this->validate(compact('products'), PlaceOrderValidate::class);
+        $uid = TokenService::getCurrentUid();
+        return (new OrderService())->order($uid, $products);
     }
 }
