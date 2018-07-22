@@ -69,4 +69,8 @@ class Product extends BaseModel
         }])->with(['properties'])->find($id);
         return $product;
     }
+
+    public static function getListByPidArr(array $pidArr){
+        return self::select($pidArr)->visible(['id', 'price', 'stock', 'name', 'main_img_url'])->toArray();
+    }
 }
