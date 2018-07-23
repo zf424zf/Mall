@@ -8,8 +8,14 @@
 
 namespace app\api\service;
 
+use app\api\exception\BaseException;
 use app\api\exception\OrderException;
+use app\api\exception\UserException;
+use app\api\model\OrderProduct;
 use app\api\model\Product as ProductModel;
+use app\api\model\UserAddress;
+use app\api\model\Order as OrderModel;
+use think\Exception;
 
 class Order
 {
@@ -24,6 +30,7 @@ class Order
 
     public function order($uid, $orderProducts)
     {
+        return self::makeOrderId();
         $this->uid = $uid;
         $this->orderProducts = $orderProducts;
         //根据订单参数获取数据库中对应商品信息状态列表
@@ -35,8 +42,118 @@ class Order
             $status['order_id'] = -1;
             return $status;
         }
-        //todo 创建订单
+        //生成订单快照
+        $snap = $this->makeOrderSnap($status);
+    }
 
+    /**
+     * 创建订单
+     * @param $orderSnap
+     * @return array
+     * @throws Exception
+     */
+    private function makeOrder($orderSnap)
+    {
+        try {
+            $orderNo = self::makeOrderId();
+            $order = new OrderModel();
+            $order->user_id = $this->uid;
+            $order->order_no = $orderNo;
+            $order->total_price = $orderSnap['orderPrice'];
+            $order->total_count = $orderSnap['totalCount'];
+            $order->snap_img = $orderSnap['mainImage'];
+            $order->snap_name = $orderSnap['title'];
+            $order->snap_address = $orderSnap['userAddress'];
+            $order->snap_itmes = json_encode($orderSnap['productStatus']);
+
+            $order->save();
+            $orderId = $order->id;
+            $createTime = $order->create_time;
+            foreach ($this->orderProducts as &$product) {
+                $product['order_id'] = $orderId;
+            }
+
+            $orderProduct = new OrderProduct();
+            $orderProduct->saveAll($this->orderProducts);
+            return [
+                'order_no' => $orderNo,
+                'order_id' => $orderId,
+                'create_time' => $createTime
+            ];
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+    }
+
+
+    /**
+     * 生成18位订单号
+     * @return string
+     */
+    public static function makeOrderId()
+    {
+        $first_str = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
+        return $first_str[(intval(date('Y')) - 2018) % 10]
+            . strtoupper(dechex(date('m')))
+            . date('d') . substr(time(), -5)
+            . substr(microtime(), 2, 7)
+            . sprintf('%02d', rand(0, 99));
+    }
+
+    /**
+     * 生成订单快照
+     * @param array $orderStatus
+     * @return array
+     * @throws UserException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    private function makeOrderSnap(array $orderStatus)
+    {
+        //初始化快照数组
+        $snap = [
+            'orderPrice' => 0,
+            'totalCount' => 0,
+            'productStatus' => [],
+            'userAddress' => null,
+            'title' => '',
+            'mainImage' => ''
+        ];
+
+        //订单快照赋值
+        $snap['orderPrice'] = $orderStatus['orderPrice'];
+        $snap['totalCount'] = $orderStatus['totalCount'];
+        $snap['productStatus'] = $orderStatus['productStatus'];
+        $snap['userAddress'] = json_encode($this->getAddress());
+        $snap['title'] = $this->products[0]['name'];
+        $snap['mainImage'] = $this->products[0]['main_img_url'];
+
+        if (count($this->products) > 1) {
+            //如果商品列表大于一件 则标题加等
+            $snap['title'] .= '等';
+        }
+        return $snap;
+    }
+
+    /**
+     * 获取用户地址
+     * @return array
+     * @throws UserException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    private function getAddress()
+    {
+        $address = UserAddress::where('user_id', '=', $this->uid)->find();
+        if (!$address) {
+            throw new UserException([
+                'msg' => '用户收货地址不存在，订单生产失败',
+                'errorCode' => 8600
+            ]);
+        }
+        return $address->toArray();
     }
 
     /**
@@ -61,6 +178,7 @@ class Order
         $status = [
             'pass' => true,
             'orderPrice' => 0,
+            'totalCount' => 0,
             'productStatus' => []
         ];
         foreach ($this->orderProducts as $orderProduct) {
@@ -71,7 +189,9 @@ class Order
                 $status['pass'] = false;
             }
             //订单总价为商品总价之和
-            $status['orderPrice'] += $productStatus['count'];
+            $status['orderPrice'] += $productStatus['sumPrice'];
+            //计算商品总数量
+            $status['totalCount'] += $productStatus['count'];
             array_push($status['productStatus'], $productStatus);
         }
         return $status;
