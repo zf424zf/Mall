@@ -2,8 +2,8 @@
 
 namespace app\http\middleware;
 
-use think\Middleware;
 use app\api\service\Token as TokenService;
+
 class BaseMiddleware
 {
     public function handle($request, \Closure $next)
@@ -14,7 +14,7 @@ class BaseMiddleware
     //检查当前用户权限，只有用户权限才能访问
     public function checkOnlyUserScope()
     {
-         return TokenService::needOnlyUserScope();
+        return TokenService::needOnlyUserScope();
     }
 
     //检查当前用户权限，至少用户权限才能访问
@@ -23,4 +23,5 @@ class BaseMiddleware
 
         return TokenService::needMinRuleUserScope();
     }
+
 }

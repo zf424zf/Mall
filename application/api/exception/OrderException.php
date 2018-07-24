@@ -15,7 +15,7 @@ class OrderException extends BaseException
     public $code = 400;
 
     //错误信息
-    public $msg = "订单错误";
+    public $msg = "订单不存在";
 
     //自定义错误码
     public $errorCode = 8500;

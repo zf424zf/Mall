@@ -11,7 +11,6 @@ namespace app\api\controller\v1;
 
 use app\api\exception\ValidateException;
 use think\Controller;
-use app\api\service\Token as TokenService;
 
 class BaseController extends Controller
 {

@@ -9,6 +9,7 @@
 namespace app\api\service;
 
 
+use app\api\exception\BaseException;
 use app\api\exception\RuleForbiddenException;
 use app\api\exception\TokenException;
 use think\Exception;
@@ -88,5 +89,16 @@ class Token
             throw new RuleForbiddenException();
         }
         throw new TokenException();
+    }
+
+    public static function checkUid($checkUid)
+    {
+        if (!$checkUid) {
+            throw new BaseException([
+                'errorCode' => '1003',
+                'msg' => '确实待检查uid参数'
+            ]);
+        }
+        return self::getCurrentUid() == $checkUid ? true : false;
     }
 }

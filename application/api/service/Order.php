@@ -8,13 +8,13 @@
 
 namespace app\api\service;
 
-use app\api\exception\BaseException;
 use app\api\exception\OrderException;
 use app\api\exception\UserException;
 use app\api\model\OrderProduct;
 use app\api\model\Product as ProductModel;
 use app\api\model\UserAddress;
 use app\api\model\Order as OrderModel;
+use think\Db;
 use think\Exception;
 
 class Order
@@ -30,7 +30,6 @@ class Order
 
     public function order($uid, $orderProducts)
     {
-        return self::makeOrderId();
         $this->uid = $uid;
         $this->orderProducts = $orderProducts;
         //根据订单参数获取数据库中对应商品信息状态列表
@@ -44,6 +43,10 @@ class Order
         }
         //生成订单快照
         $snap = $this->makeOrderSnap($status);
+        //create order
+        $order = $this->makeOrder($snap);
+        $order['pass'] = true;
+        return $order;
     }
 
     /**
@@ -54,8 +57,11 @@ class Order
      */
     private function makeOrder($orderSnap)
     {
+        Db::startTrans();
         try {
+            //生成订单号
             $orderNo = self::makeOrderId();
+            //订单创建
             $order = new OrderModel();
             $order->user_id = $this->uid;
             $order->order_no = $orderNo;
@@ -64,23 +70,28 @@ class Order
             $order->snap_img = $orderSnap['mainImage'];
             $order->snap_name = $orderSnap['title'];
             $order->snap_address = $orderSnap['userAddress'];
-            $order->snap_itmes = json_encode($orderSnap['productStatus']);
-
+            $order->snap_items = json_encode($orderSnap['productStatus']);
             $order->save();
+            //获取order_id
             $orderId = $order->id;
+            //获取订单创建时间
             $createTime = $order->create_time;
             foreach ($this->orderProducts as &$product) {
                 $product['order_id'] = $orderId;
             }
 
+            //保存订单商品表
             $orderProduct = new OrderProduct();
             $orderProduct->saveAll($this->orderProducts);
+            Db::commit();
+            //返回订单信息
             return [
                 'order_no' => $orderNo,
                 'order_id' => $orderId,
                 'create_time' => $createTime
             ];
         } catch (Exception $exception) {
+            Db::rollback();
             throw $exception;
         }
     }
@@ -146,6 +157,7 @@ class Order
      */
     private function getAddress()
     {
+        //查询当前用户的地址
         $address = UserAddress::where('user_id', '=', $this->uid)->find();
         if (!$address) {
             throw new UserException([
@@ -241,5 +253,25 @@ class Order
         return $productStatus;
     }
 
+    /**
+     * 检查库存量
+     * @param $orderId
+     * @return array
+     * @throws OrderException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function checkOrderStock($orderId)
+    {
+        //根据orderId查询orderProduct
+        $orderProduct = OrderProduct::where('order_id', '=', $orderId)->select();
+        $this->orderProducts = $orderProduct;
+        //根据订单获取商品信息
+        $this->products = $this->getByOrder($orderProduct);
+        //获取订单状态
+        $status = $this->getOrderStatus();
+        return $status;
+    }
 
 }

@@ -32,6 +32,7 @@ class Order extends BaseController
         $products = json_decode(Request::post('products'), true);
         $this->validate(compact('products'), PlaceOrderValidate::class);
         $uid = TokenService::getCurrentUid();
-        return (new OrderService())->order($uid, $products);
+        $order = (new OrderService())->order($uid, $products);
+        return json(compact('order'));
     }
 }
