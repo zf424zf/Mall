@@ -24,7 +24,8 @@
       "app\\": "application"
     },
     "files": [
-      "helper/ApiCode.php"
+      "helper/ApiCode.php",
+      "helper/Scope.php"
     ],
     "classmamp": [
       "extend/WxPay"

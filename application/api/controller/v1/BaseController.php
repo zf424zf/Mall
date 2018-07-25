@@ -57,7 +57,6 @@ class BaseController extends Controller
         if ($callback && is_callable($callback)) {
             call_user_func_array($callback, [$v, &$data]);
         }
-
         if (!$v->check($data)) {
             if ($this->failException) {
                 throw new ValidateException($v->getError());

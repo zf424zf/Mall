@@ -265,7 +265,7 @@ class Order
     public function checkOrderStock($orderId)
     {
         //根据orderId查询orderProduct
-        $orderProduct = OrderProduct::where('order_id', '=', $orderId)->select();
+        $orderProduct = OrderProduct::where('order_id', '=', $orderId)->select()->toArray();
         $this->orderProducts = $orderProduct;
         //根据订单获取商品信息
         $this->products = $this->getByOrder($orderProduct);

@@ -10,6 +10,8 @@ namespace app\api\controller\v1;
 
 
 use app\api\Validate\PayOrder\PayOrderValidate;
+use app\api\service\Pay as PayService;
+use think\facade\Request;
 
 class Pay extends BaseController
 {
@@ -17,9 +19,11 @@ class Pay extends BaseController
         'PayMiddleware' => ['only' => ['payOrder']]
     ];
 
-    public function payOrder($id = '')
+    public function payOrder()
     {
+        $id = Request::post('id');
         $this->validate(compact('id'), PayOrderValidate::class);
-
+        $pay = new PayService($id);
+        return $pay->pay();
     }
 }

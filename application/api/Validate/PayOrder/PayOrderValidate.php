@@ -21,9 +21,9 @@ class PayOrderValidate extends BaseValidate
     ];
 
     protected $message = [
-        "id.require" => 3001,//banner id必须传递
-        "id.integer" => 3002,//banner id必须是数值类型
-        "id.isPositiveInteger" => 3003//banner id必须是正整数
+        "id.require" => 8401,//id必须传递
+        "id.integer" => 8402,// id必须是数值类型
+        "id.isPositiveInteger" => 8403// id必须是正整数
     ];
 
 }

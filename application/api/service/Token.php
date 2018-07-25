@@ -49,6 +49,7 @@ class Token
 
     public static function getCurrentUid()
     {
+
         return self::getTokenValue('uid');
     }
 

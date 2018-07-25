@@ -148,6 +148,10 @@ return [
     //图片前缀url
     'img_prefix' => env('img_prefix','http://mall.loc/images'),
     'curl_ssl_verify' => env('curl_ssl_verify',true),
+    //小程序app id
     'app_mall_key' => env('app_mall_key','X3DsFTMPF21a3Gir'),
-    'app_token_expire' => 7200
+    //用户token过期时间
+    'app_token_expire' => 7200,
+    //商户号
+    'mall_mchid' => env('mall_mchid','1900009851')
 ];
