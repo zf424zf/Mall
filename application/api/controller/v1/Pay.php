@@ -26,4 +26,9 @@ class Pay extends BaseController
         $pay = new PayService($id);
         return $pay->pay();
     }
+
+    public function receiveNotify()
+    {
+
+    }
 }
