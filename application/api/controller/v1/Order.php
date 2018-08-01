@@ -8,10 +8,12 @@
 
 namespace app\api\controller\v1;
 
+use app\api\Validate\Order\OrderListValidate;
 use app\api\Validate\Order\PlaceOrderValidate;
 use think\facade\Request;
 use app\api\service\Token as TokenService;
 use app\api\service\Order as OrderService;
+use app\api\model\Order as OrderModel;
 
 class Order extends BaseController
 {
@@ -34,5 +36,22 @@ class Order extends BaseController
         $uid = TokenService::getCurrentUid();
         $order = (new OrderService())->order($uid, $products);
         return json(compact('order'));
+    }
+
+    public function orderList($page = 1, $pagesize = 15)
+    {
+        $this->validate(compact('page', 'pagesize'), OrderListValidate::class);
+        $uid = TokenService::getCurrentUid();
+        $paginate = OrderModel::getList($uid, $page, $pagesize);
+        if ($paginate->isEmpty()) {
+            return json([
+                'data' => [],
+                'current_page' => $paginate->currentPage()
+            ]);
+        }
+        return json([
+            'data' => $paginate->toArray(),
+            'current_page' => $paginate->currentPage()
+        ]);
     }
 }

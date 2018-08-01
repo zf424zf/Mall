@@ -9,6 +9,8 @@
 namespace app\api\controller\v1;
 
 
+use app\api\service\WXConfig;
+use app\api\service\WXNotify;
 use app\api\Validate\PayOrder\PayOrderValidate;
 use app\api\service\Pay as PayService;
 use think\facade\Request;
@@ -19,6 +21,12 @@ class Pay extends BaseController
         'PayMiddleware' => ['only' => ['payOrder']]
     ];
 
+    /**
+     * 微信支付接口
+     * @return array
+     * @throws \app\api\exception\ValidateException
+     * @throws \think\Exception
+     */
     public function payOrder()
     {
         $id = Request::post('id');
@@ -27,8 +35,12 @@ class Pay extends BaseController
         return $pay->pay();
     }
 
+    /**
+     * 微信支付回调
+     */
     public function receiveNotify()
     {
-
+        $notify = new WXNotify();
+        $notify->Handle(new WXConfig(),true);
     }
 }

@@ -22,4 +22,12 @@ class Order extends BaseModel
     const DELIVERED = 3;//已发货
 
     const PAID_BUT_NO_STOCK = 4;//已支付但是库存不够
+
+    public static function getList($uid, $page = 1, $pagesize = 15)
+    {
+        $paginate = self::where('user_id', '=', $uid)
+            ->order('create_time desc')
+            ->paginate(['page' => $page, 'list_rows' => $pagesize]);
+        return $paginate;
+    }
 }

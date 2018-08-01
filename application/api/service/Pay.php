@@ -73,8 +73,7 @@ class Pay
         //设置用户openId
         $wxOrder->SetOpenid($openId);
         //设置微信回调通知
-        //todo
-        $wxOrder->SetNotify_url('');
+        $wxOrder->SetNotify_url(config('wx.pay_back_url'));
 
         return $this->getPaySign($wxConfig, $wxOrder);
     }
