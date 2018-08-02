@@ -32,11 +32,14 @@ Route::get('api/:version/category/all', 'api/:version.Category/getAllCategory');
 Route::post('api/:version/token/user', 'api/:version.Token/getToken');
 
 //用户地址
-Route::post('api/:version/address','api/:version.Address/createOrUpdate');
+Route::post('api/:version/address', 'api/:version.Address/createOrUpdate');
 
+//支付
+Route::post('api/:version/pay_order', 'api/:version.Pay/payOrder');
+Route::post('api/:version/pay/notify', 'api/:version.Pay/receiveNotify');
 //订单
-Route::post('api/:version/order','api/:version.Order/placeOrder');
-Route::post('api/:version/pay_order','api/:version.Pay/payOrder');
-Route::post('api/:version/pay/notify','api/:version.Pay/receiveNotify');
-Route::get('api/:version/order/list','api/:version.Order/orderList');
-Route::get('api/:version/order/:id','api/:version.Order/getInfo');
+Route::group('api/:version/order', function () {
+    Route::post('/', 'api/:version.Order/placeOrder');
+    Route::get('/list', 'api/:version.Order/orderList');
+    Route::get('/:id', 'api/:version.Order/getInfo');
+});
