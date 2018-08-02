@@ -23,6 +23,40 @@ class Order extends BaseModel
 
     const PAID_BUT_NO_STOCK = 4;//已支付但是库存不够
 
+    /**
+     * 转换snap_items属性为json对象
+     * @param $value
+     * @return mixed|null
+     */
+    public function getSnapItemsAttr($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+        return json_decode($value);
+    }
+
+    /**
+     * 转换snap_address属性为json对象
+     * @param $value
+     * @return mixed|null
+     */
+    public function getSnapAddressAttr($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+        return json_decode($value);
+    }
+
+    /**
+     * 获取订单列表查询器
+     * @param $uid
+     * @param int $page
+     * @param int $pagesize
+     * @return \think\Paginator
+     * @throws \think\exception\DbException
+     */
     public static function getList($uid, $page = 1, $pagesize = 15)
     {
         $paginate = self::where('user_id', '=', $uid)

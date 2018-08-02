@@ -8,6 +8,8 @@
 
 namespace app\api\controller\v1;
 
+use app\api\exception\OrderException;
+use app\api\Validate\Order\OrderInfoValidate;
 use app\api\Validate\Order\OrderListValidate;
 use app\api\Validate\Order\PlaceOrderValidate;
 use think\facade\Request;
@@ -29,6 +31,11 @@ class Order extends BaseController
         'OrderPlaceMiddleware' => ['only' => ['placeorder']],
     ];
 
+    /**
+     * 下单接口
+     * @return \think\response\Json
+     * @throws \app\api\exception\ValidateException
+     */
     public function placeOrder()
     {
         $products = json_decode(Request::post('products'), true);
@@ -38,6 +45,13 @@ class Order extends BaseController
         return json(compact('order'));
     }
 
+    /**
+     * 订单列表接口
+     * @param int $page
+     * @param int $pagesize
+     * @return \think\response\Json
+     * @throws \app\api\exception\ValidateException
+     */
     public function orderList($page = 1, $pagesize = 15)
     {
         $this->validate(compact('page', 'pagesize'), OrderListValidate::class);
@@ -53,5 +67,23 @@ class Order extends BaseController
             'data' => $paginate->toArray(),
             'current_page' => $paginate->currentPage()
         ]);
+    }
+
+    /**
+     * 订单详情接口
+     * @param $id
+     * @return OrderModel|null
+     * @throws OrderException
+     * @throws \app\api\exception\ValidateException
+     * @throws \think\exception\DbException
+     */
+    public function getInfo($id)
+    {
+        $this->validate(compact('id'), OrderInfoValidate::class);
+        $info = OrderModel::get($id);
+        if (!$info) {
+            throw new OrderException();
+        }
+        return $info->hidden(['prepay_id']);
     }
 }

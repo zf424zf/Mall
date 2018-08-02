@@ -38,3 +38,5 @@ Route::post('api/:version/address','api/:version.Address/createOrUpdate');
 Route::post('api/:version/order','api/:version.Order/placeOrder');
 Route::post('api/:version/pay_order','api/:version.Pay/payOrder');
 Route::post('api/:version/pay/notify','api/:version.Pay/receiveNotify');
+Route::get('api/:version/order/list','api/:version.Order/orderList');
+Route::get('api/:version/order/:id','api/:version.Order/getInfo');
