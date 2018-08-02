@@ -33,6 +33,6 @@ class Banner extends BaseController
             //若没找到资源,抛出自定义异常
             throw new BannerMissException();
         }
-        return json(compact('banner'));
+        return json($banner);
     }
 }
