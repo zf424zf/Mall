@@ -27,7 +27,7 @@ class Theme extends BaseController
             //找不到指定ids的theme 抛出异常
             throw new ThemeException();
         }
-        return json(compact('result'));
+        return json($result);
     }
 
     public function getOne($id)
