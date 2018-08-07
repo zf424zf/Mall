@@ -42,7 +42,8 @@ class Pay
             return $status;
         }
         //todo list 微信支付
-        return $this->wxPay($status['orderPrice']);
+        return $this->jspay($status);
+//        return $this->wxPay($status['orderPrice']);
     }
 
     /**
@@ -167,5 +168,23 @@ class Pay
         //设置订单号
         $this->orderNo = $order->order_no;
         return true;
+    }
+
+    private function jspay($status){
+        $config = [
+            'ToObject' => false,                     //返回数据输出对象 收银台模式不能开启。
+            'MerchantID' => env('payjs_mchid'),                      //商户号
+            'MerchantKey' => env('payjs_secret'),                     //密钥
+            'NotifyURL' => /*env('app_host') .'api/v1/pay/notify'*/'', //notify地址 接收微信支付异步通知的回调地址。必须为可直接访问的URL，不能带参数、session验证、csrf验证。留空则不通知 需要保留最后的斜杠
+        ];
+        $payjs = new \Musnow\Payjs\Pay($config);
+        $data = [
+            'TotalFee' => $status['orderPrice'] * 100,          //金额，单位 分
+            'Body' => '商品支付',       //订单标题
+            'Attach' => '',    //用户自定义数据，在notify时会原样返回
+            'outTradeNo' => $this->orderNo,   //商户订单号，需要保证唯一
+            'callbackUrl' => '',      //用户支付成功后，前端跳转地址。留空则支付后关闭webview
+        ];
+        return $ret = $payjs->Cashier($data);
     }
 }

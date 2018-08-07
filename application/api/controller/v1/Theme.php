@@ -34,9 +34,9 @@ class Theme extends BaseController
     {
         $this->validate(compact('id'),ThemeValidate::class);
         $result = ThemeModel::getThemeWithProdect($id);
-        if($result->isEmpty()){
+        if(empty($result)){
             throw new ThemeException();
         }
-        return json(compact('result'));
+        return json($result);
     }
 }

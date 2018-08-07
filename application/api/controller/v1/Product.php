@@ -17,7 +17,7 @@ class Product extends BaseController
             throw new ProductException();
         }
         $result = $recents->hidden(['summary']);
-        return json(compact('result'));
+        return json($result);
     }
 
     /**

@@ -4,8 +4,43 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "296bd8a1d28e39d56dcd80ce7be249f3",
+    "content-hash": "507ad83a9b7f72ccfbb44a7d24e3c189",
     "packages": [
+        {
+            "name": "musnow/payjs",
+            "version": "v2.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/musnow/payjs.git",
+                "reference": "c924ea8dd7ae70528272da4198743288c205bbdf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/musnow/payjs/zipball/c924ea8dd7ae70528272da4198743288c205bbdf",
+                "reference": "c924ea8dd7ae70528272da4198743288c205bbdf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Musnow\\Payjs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "musnow",
+                    "email": "me@yubanmei.com"
+                }
+            ],
+            "time": "2018-06-02T04:30:09+00:00"
+        },
         {
             "name": "topthink/framework",
             "version": "v5.1.18",
@@ -16,7 +51,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/framework/833fcaf0f29f23bdceaae655f64d10c18b9bf562.zip",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/833fcaf0f29f23bdceaae655f64d10c18b9bf562",
                 "reference": "833fcaf0f29f23bdceaae655f64d10c18b9bf562",
                 "shasum": ""
             },
@@ -67,7 +102,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-installer/f5400a12c60e513911aef41fe443fa6920952675.zip",
+                "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
                 "reference": "f5400a12c60e513911aef41fe443fa6920952675",
                 "shasum": ""
             },
