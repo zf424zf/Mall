@@ -57,6 +57,6 @@ class Product extends BaseController
         if(!$result){
             throw new ProductException();
         }
-        return json(compact('result'));
+        return json($result);
     }
 }
